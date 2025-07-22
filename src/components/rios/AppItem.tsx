@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import StarRating from './StarRating';
-import { FileBadge } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 
 export interface AppItemProps {
     name: string;
@@ -11,18 +11,21 @@ export interface AppItemProps {
     ratingCount: string;
     price: string;
     link: string;
+    icon?: keyof typeof LucideIcons;
 }
 
-export default function AppItem({ name, category, rating, ratingCount, price, link }: AppItemProps) {
+export default function AppItem({ name, category, rating, ratingCount, price, link, icon = 'FileBadge' }: AppItemProps) {
     const handleGet = () => {
         window.location.href = link;
     };
     
+    const Icon = LucideIcons[icon] as React.ElementType || LucideIcons['FileBadge'];
+
     return (
         <Card className="hover:shadow-lg transition-all duration-300 hover:scale-[1.02] dark:bg-card/30">
             <CardContent className="p-4 flex items-center gap-4">
                 <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-primary/10 shadow-md">
-                    <FileBadge className="h-8 w-8 text-primary" />
+                    <Icon className="h-8 w-8 text-primary" />
                 </div>
                 <div className="flex-1">
                     <h3 className="font-semibold text-lg">{name}</h3>
