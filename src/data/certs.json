@@ -1,0 +1,27 @@
+
+[
+    { "name": "Vietnam Cert", "category": "VIETNAM JOINT STOCK COMMERCIAL BANK FOR INDUSTRY AND TRADE", "rating": 4.5, "ratingCount": "2.9M", "price": "Free", "link": "https://skibiditech.co/v.zip" },
+    { "name": "Beijing Esensoft Cert", "category": "Beijing Esensoft Co., Ltd", "rating": 4.8, "ratingCount": "1.8M", "price": "Free", "link": "https://skibiditech.co/cert13.zip" },
+    { "name": "Wuling Power Cert", "category": "Wuling Power Corporation", "rating": 4.8, "ratingCount": "1.8M", "price": "Free", "link": "https://skibiditech.co/cert.zip" },
+    { "name": "Khoindvn Certificates", "category": "Certificates", "rating": 4.8, "ratingCount": "1.8M", "price": "Free", "link": "https://skibiditech.co/all/Certs.zip" },
+    { "name": "KSIGN Cert NREH", "category": "NREH ESTATE INFORMATION TECHNOLOGY CO.,LTD", "rating": 4.8, "ratingCount": "1.8M", "price": "Free", "link": "https://skibiditech.co/cert/19.ksign" },
+    { "name": "KSIGN Cert China Railway", "category": "China Railway Eryuan Engineering Group Co., Ltd", "rating": 4.8, "ratingCount": "1.8M", "price": "Free", "link": "https://skibiditech.co/cert/20.ksign" },
+    { "name": "KSIGN Cert TCL", "category": "TCL household Appliance Marketing Co., LTD", "rating": 4.8, "ratingCount": "1.8M", "price": "Free", "link": "https://skibiditech.co/cert/18.ksign" },
+    { "name": "ECertificate DTT", "category": "DTT Technologies", "rating": 4.8, "ratingCount": "1.8M", "price": "Free", "link": "https://skibiditech.co/cert/17.esigncert" },
+    { "name": "KSIGN Cert Bank", "category": "Vietnam Technological and Commercial Joint- stock Bank", "rating": 4.8, "ratingCount": "1.8M", "price": "Free", "link": "https://skibiditech.co/cert/13.ksign" },
+    { "name": "KSIGN Cert Vittel 1", "category": "VVITTEL GROUP 1", "rating": 4.8, "ratingCount": "1.8M", "price": "Free", "link": "https://skibiditech.co/cert/13.ksign" },
+    { "name": "KSIGN Cert Vittel", "category": "VVITTEL GROUP", "rating": 4.8, "ratingCount": "1.8M", "price": "Free", "link": "https://skibiditech.co/cert/12.ksign" },
+    { "name": "ECertificate Toyota", "category": "GAC TOYOTA MOTOR CO, LTD.", "rating": 4.8, "ratingCount": "1.8M", "price": "Free", "link": "https://skibiditech.co/cert/11.esigncert" },
+    { "name": "HDFC Certificate", "category": "HDFC", "rating": 4.8, "ratingCount": "1.8M", "price": "Free", "link": "https://skibiditech.co/cert/htd_cert.zip" },
+    { "name": "ECertificate EVN", "category": "Vietnam Electricity", "rating": 5, "ratingCount": "1.8M", "price": "Free", "link": "https://skibiditech.co/cert/14.esigncert" },
+    { "name": "ECertificate Kotak", "category": "Kotak Mahindra Bank Ltd", "rating": 4.8, "ratingCount": "1.2M", "price": "Free", "link": "https://skibiditech.co/cert/10.esigncert" },
+    { "name": "ECertificate Avex", "category": "AVEX DIGITAL INC", "rating": 4.8, "ratingCount": "1.2M", "price": "Free", "link": "https://skibiditech.co/cert/1.esigncert" },
+    { "name": "ECertificate Insurance", "category": "China Continent Property & Casualty Insurance Company Ltd.", "rating": 4.8, "ratingCount": "1.1M", "price": "Free", "link": "https://skibiditech.co/cert/2.esigncert" },
+    { "name": "ECertificate Network", "category": "Zhuhaishi ShijiXintong Network Technology Co., Ltd.", "rating": 4.8, "ratingCount": "900K", "price": "Free", "link": "https://skibiditech.co/cert/3.esigncert" },
+    { "name": "ECertificate Sun Life", "category": "Sun Life Everbright Life Insurance Co.,Ltd", "rating": 4.8, "ratingCount": "850K", "price": "Free", "link": "https://skibiditech.co/cert/4.esigncert" },
+    { "name": "ECertificate Emploi", "category": "Ministere de I Emploi de la Protection Sociale.", "rating": 4.8, "ratingCount": "800K", "price": "Free", "link": "https://skibiditech.co/cert/5.esigncert" },
+    { "name": "ECertificate Sunshine 1", "category": "Sunshine 1", "rating": 4.8, "ratingCount": "800K", "price": "Free", "link": "https://skibiditech.co/cert/6.esigncert" },
+    { "name": "ECertificate Sunshine 2", "category": "Sunshine 2", "rating": 4.8, "ratingCount": "800K", "price": "Free", "link": "https://skibiditech.co/cert/7.esigncert" },
+    { "name": "ECertificate Sunshine 3", "category": "Sunshine 3", "rating": 4.8, "ratingCount": "800K", "price": "Free", "link": "https://skibiditech.co/cert/8.esigncert" },
+    { "name": "ECertificate Sunshine 4", "category": "Sunshine 4", "rating": 4.8, "ratingCount": "800K", "price": "Free", "link": "https://skibiditech.co/cert/9.esigncert" }
+]

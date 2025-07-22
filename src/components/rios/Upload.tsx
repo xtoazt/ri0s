@@ -1,0 +1,167 @@
+'use client';
+import { useState, useRef } from 'react';
+import { UploadCloud, File, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { Card, CardContent } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
+
+interface UploadedFile {
+    id: string;
+    name: string;
+    size: number;
+    status: 'uploading' | 'success' | 'error' | 'signing' | 'signed';
+    progress: number;
+    errorMessage?: string;
+}
+
+export default function Upload() {
+    const [files, setFiles] = useState<UploadedFile[]>([]);
+    const [isDragging, setIsDragging] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const { toast } = useToast();
+
+    const handleFileSelect = (selectedFiles: FileList | null) => {
+        if (!selectedFiles) return;
+        
+        const newFiles: UploadedFile[] = Array.from(selectedFiles)
+            .filter(file => file.name.endsWith('.ipa'))
+            .map(file => ({
+                id: `${file.name}-${Date.now()}`,
+                name: file.name,
+                size: file.size,
+                status: 'uploading',
+                progress: 0,
+            }));
+        
+        if (newFiles.length !== selectedFiles.length) {
+            toast({
+                title: 'Invalid File Type',
+                description: 'Only .ipa files are allowed.',
+                variant: 'destructive'
+            });
+        }
+
+        setFiles(prev => [...newFiles, ...prev]);
+        simulateUpload(newFiles);
+    };
+    
+    const simulateUpload = (filesToUpload: UploadedFile[]) => {
+        filesToUpload.forEach(file => {
+            const interval = setInterval(() => {
+                setFiles(prev => prev.map(f => {
+                    if (f.id === file.id && f.status === 'uploading') {
+                        const newProgress = f.progress + 10;
+                        if (newProgress >= 100) {
+                            clearInterval(interval);
+                            return { ...f, progress: 100, status: 'success' };
+                        }
+                        return { ...f, progress: newProgress };
+                    }
+                    return f;
+                }));
+            }, 200);
+        });
+    };
+
+    const handleSign = (fileId: string) => {
+        setFiles(prev => prev.map(f => f.id === fileId ? { ...f, status: 'signing' } : f));
+        setTimeout(() => {
+            setFiles(prev => prev.map(f => f.id === fileId ? { ...f, status: 'signed' } : f));
+            toast({
+                title: "Signing Complete",
+                description: `${files.find(f => f.id === fileId)?.name} has been signed.`,
+            });
+        }, 2000);
+    };
+    
+    const handleInstall = (fileName: string) => {
+        toast({
+            title: "Installation Started",
+            description: `Preparing to install ${fileName}.`,
+        });
+        // This is a mock install link
+        window.location.href = `itms-services://?action=download-manifest&url=https://example.com/mock-install.plist`;
+    };
+
+    const formatFileSize = (bytes: number) => {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    };
+
+    return (
+        <div>
+            <h1 className="text-3xl font-bold mb-6 font-headline">Upload & Sign</h1>
+            <Card 
+                className={cn(
+                    "border-2 border-dashed transition-all dark:bg-card",
+                    isDragging ? "border-primary bg-primary/10" : "border-border"
+                )}
+                onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                onDragLeave={() => setIsDragging(false)}
+                onDrop={(e) => { e.preventDefault(); setIsDragging(false); handleFileSelect(e.dataTransfer.files); }}
+            >
+                <CardContent className="p-8 text-center cursor-pointer" onClick={() => fileInputRef.current?.click()}>
+                    <UploadCloud className="mx-auto h-12 w-12 text-muted-foreground" />
+                    <h3 className="mt-4 text-lg font-semibold">Drag & drop or click to upload</h3>
+                    <p className="mt-1 text-sm text-muted-foreground">Select .ipa files to sign</p>
+                    <input 
+                        ref={fileInputRef}
+                        type="file" 
+                        accept=".ipa" 
+                        multiple 
+                        className="hidden"
+                        onChange={(e) => handleFileSelect(e.target.files)}
+                    />
+                    <Button variant="outline" className="mt-4">Choose Files</Button>
+                </CardContent>
+            </Card>
+
+            {files.length > 0 && (
+                <div className="mt-8">
+                    <h2 className="text-2xl font-semibold mb-4">Uploads</h2>
+                    <div className="space-y-4">
+                        {files.map(file => (
+                            <Card key={file.id} className="dark:bg-card">
+                                <CardContent className="p-4 flex items-center gap-4">
+                                    <File className="h-8 w-8 text-primary" />
+                                    <div className="flex-1">
+                                        <p className="font-semibold truncate">{file.name}</p>
+                                        <p className="text-sm text-muted-foreground">{formatFileSize(file.size)}</p>
+                                        {(file.status === 'uploading' || file.status === 'signing') && <Progress value={file.progress} className="mt-2 h-2" />}
+                                    </div>
+                                    <div className="flex items-center gap-2 min-w-[220px]">
+                                        {file.status === 'success' && (
+                                            <>
+                                                <Select defaultValue="1">
+                                                    <SelectTrigger className="w-[120px]">
+                                                        <SelectValue placeholder="Certificate" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="1">Vietnam Cert</SelectItem>
+                                                        <SelectItem value="2">Beijing Cert</SelectItem>
+                                                        <SelectItem value="3">Wuling Cert</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                                <Button onClick={() => handleSign(file.id)}>Sign</Button>
+                                            </>
+                                        )}
+                                        {file.status === 'signing' && <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />}
+                                        {file.status === 'signed' && <Button onClick={() => handleInstall(file.name)} className="bg-accent hover:bg-accent/90">Install</Button>}
+                                        {file.status === 'uploading' && <span className="text-sm text-muted-foreground">{file.progress}%</span>}
+                                        {file.status === 'error' && <XCircle className="h-5 w-5 text-destructive" />}
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
