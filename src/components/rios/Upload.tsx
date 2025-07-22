@@ -94,10 +94,12 @@ export default function Upload({ onFileSigned }: UploadProps) {
     const handleInstall = (fileName: string) => {
         toast({
             title: "Installation Started",
-            description: `Preparing to install ${fileName}.`,
+            description: `Your device will now ask for confirmation to install ${fileName}.`,
         });
-        // This is a mock install link
-        window.location.href = `itms-services://?action=download-manifest&url=https://example.com/mock-install.plist`;
+        // This is a placeholder link. For a real installation, you would need a backend
+        // to generate and host a .plist file that points to the signed .ipa file.
+        const plistUrl = `https://example.com/manifests/${fileName}.plist`;
+        window.location.href = `itms-services://?action=download-manifest&url=${encodeURIComponent(plistUrl)}`;
     };
 
     const formatFileSize = (bytes: number) => {
