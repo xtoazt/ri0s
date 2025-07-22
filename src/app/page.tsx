@@ -1,6 +1,7 @@
 import Header from '@/components/rios/Header';
 import Tutorial from '@/components/rios/Tutorial';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default function Home() {
@@ -9,6 +10,13 @@ export default function Home() {
       <Header />
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="text-center mb-12">
+          <Image
+            src="/logo.png"
+            alt="Ri0S Logo"
+            width={128}
+            height={128}
+            className="mx-auto mb-6"
+          />
           <h1 className="text-4xl lg:text-5xl font-bold text-primary mb-4 font-headline">
             Set Up Ri0S on Your Device
           </h1>
