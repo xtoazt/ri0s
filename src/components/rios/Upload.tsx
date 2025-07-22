@@ -9,7 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
 interface UploadedFile {
-    id: string; // This will now be the ID from the signing server
+    id: string; 
     name: string;
     size: number;
     status: 'uploading' | 'success' | 'error' | 'signing' | 'signed' | 'installing';
@@ -80,13 +80,13 @@ export default function Upload({ onFileSigned }: UploadProps) {
         };
 
         xhr.onload = () => {
-            setFiles(prev => prev.filter(f => f.id !== tempId)); // Remove temporary entry
+            setFiles(prev => prev.filter(f => f.id !== tempId)); 
             if (xhr.status === 200) {
                 try {
                     const response = JSON.parse(xhr.responseText);
-                    if (response.success && response.data && response.data.uploaded_files) {
+                    if (response.success && response.data && response.data.uploaded_files && response.name) {
                         const newFiles: UploadedFile[] = response.data.uploaded_files.map((file: any) => ({
-                            id: file.name, // The server returns the ID in the 'name' field
+                            id: response.name, 
                             name: file.original_name,
                             size: file.size,
                             status: 'success',
@@ -96,7 +96,7 @@ export default function Upload({ onFileSigned }: UploadProps) {
                         setFiles(prev => [...newFiles, ...prev]);
                         toast({ title: "Upload complete", description: "Your files are ready to be signed." });
                     } else {
-                        const errorMsg = response.data?.errors?.join(', ') || 'Unknown upload error.';
+                        const errorMsg = response.data?.errors?.join(', ') || response.message || 'Unknown upload error.';
                         toast({ title: 'Upload Failed', description: errorMsg, variant: 'destructive' });
                     }
                 } catch (e) {
@@ -122,20 +122,23 @@ export default function Upload({ onFileSigned }: UploadProps) {
         setFiles(prev => prev.map(f => f.id === fileId ? { ...f, status: 'signing' } : f));
 
         try {
-            await fetch(`https://sign.skibiditech.co/sign.php?app=${fileId}&cert=${fileToSign.selectedCert}&rid=${Math.random()}`, { 
-                method: "POST",
-                mode: 'no-cors' 
+            const status = await fetch(`https://sign.skibiditech.co/sign.php?app=${fileId}&cert=${fileToSign.selectedCert}&rid=${Math.random()}`, { 
+                method: "POST"
             });
+            const json = await status.json();
 
-            // Since we can't read the response in no-cors mode, we assume success and proceed.
-            setFiles(prev => prev.map(f => f.id === fileId ? { ...f, status: 'signed' } : f));
-            onFileSigned({ id: fileToSign.id, name: fileToSign.name, size: fileToSign.size });
-            toast({
-                title: "Signing Complete",
-                description: `${fileToSign.name} has been signed. You can now install it.`,
-            });
+            if (json.state) {
+                 setFiles(prev => prev.map(f => f.id === fileId ? { ...f, status: 'signed' } : f));
+                onFileSigned({ id: fileToSign.id, name: fileToSign.name, size: fileToSign.size });
+                toast({
+                    title: "Signing Complete",
+                    description: `${fileToSign.name} has been signed. You can now install it.`,
+                });
+            } else {
+                 setFiles(prev => prev.map(f => f.id === fileId ? { ...f, status: 'error', errorMessage: json.state || 'Signing failed.' } : f));
+                toast({ title: "Signing Failed", description: json.state || 'An unknown error occurred during signing.', variant: 'destructive' });
+            }
         } catch (error) {
-            // This catch block will now only catch true network errors (e.g., DNS failure, no internet)
             setFiles(prev => prev.map(f => f.id === fileId ? { ...f, status: 'error', errorMessage: 'Network error during signing.' } : f));
             toast({ title: "Signing Failed", description: 'Could not connect to the signing server. Please check your network connection.', variant: 'destructive' });
         }
