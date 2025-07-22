@@ -12,15 +12,13 @@ interface IpaLibraryProps {
 export default function IpaLibrary({ signedFiles }: IpaLibraryProps) {
     const { toast } = useToast();
 
-    const handleInstall = (fileName: string) => {
+    const handleInstall = (file: SignedFile) => {
         toast({
-            title: "Installation Started",
-            description: `Your device will now ask for confirmation to install ${fileName}.`,
+            title: "Reinstallation Started",
+            description: `Your device will now ask for confirmation to install ${file.name}.`,
         });
-        // This is a placeholder link. For a real installation, you would need a backend
-        // to generate and host a .plist file that points to the signed .ipa file.
-        const plistUrl = `https://example.com/manifests/${fileName}.plist`;
-        window.location.href = `itms-services://?action=download-manifest&url=${encodeURIComponent(plistUrl)}`;
+        const manifestUrl = `https://sign.skibiditech.co/generate_plist.php?app=${file.id}&rid=${Math.random()}`;
+        window.location.href = `itms-services://?action=download-manifest&url=${encodeURIComponent(manifestUrl)}`;
     };
 
     const formatFileSize = (bytes: number) => {
@@ -52,7 +50,7 @@ export default function IpaLibrary({ signedFiles }: IpaLibraryProps) {
                                     <p className="font-semibold truncate">{file.name}</p>
                                     <p className="text-sm text-muted-foreground">{formatFileSize(file.size)}</p>
                                 </div>
-                                <Button onClick={() => handleInstall(file.name)} className="bg-accent hover:bg-accent/90">Reinstall</Button>
+                                <Button onClick={() => handleInstall(file)} className="bg-accent hover:bg-accent/90">Reinstall</Button>
                             </CardContent>
                         </Card>
                     ))}

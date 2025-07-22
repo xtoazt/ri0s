@@ -9,12 +9,13 @@ import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
 interface UploadedFile {
-    id: string;
+    id: string; // This will now be the ID from the signing server
     name: string;
     size: number;
-    status: 'uploading' | 'success' | 'error' | 'signing' | 'signed';
+    status: 'uploading' | 'success' | 'error' | 'signing' | 'signed' | 'installing';
     progress: number;
     errorMessage?: string;
+    selectedCert: string;
 }
 
 export interface SignedFile {
@@ -35,71 +36,126 @@ export default function Upload({ onFileSigned }: UploadProps) {
 
     const handleFileSelect = (selectedFiles: FileList | null) => {
         if (!selectedFiles) return;
+
+        const ipaFiles = Array.from(selectedFiles).filter(file => file.name.endsWith('.ipa'));
         
-        const newFiles: UploadedFile[] = Array.from(selectedFiles)
-            .filter(file => file.name.endsWith('.ipa'))
-            .map(file => ({
-                id: `${file.name}-${Date.now()}`,
-                name: file.name,
-                size: file.size,
-                status: 'uploading',
-                progress: 0,
-            }));
-        
-        if (newFiles.length !== selectedFiles.length) {
+        if (ipaFiles.length !== selectedFiles.length) {
             toast({
                 title: 'Invalid File Type',
                 description: 'Only .ipa files are allowed.',
                 variant: 'destructive'
             });
         }
-
-        setFiles(prev => [...newFiles, ...prev]);
-        simulateUpload(newFiles);
+        
+        if (ipaFiles.length > 0) {
+            uploadFiles(ipaFiles);
+        }
     };
     
-    const simulateUpload = (filesToUpload: UploadedFile[]) => {
+    const uploadFiles = (filesToUpload: File[]) => {
+        const formData = new FormData();
         filesToUpload.forEach(file => {
-            const interval = setInterval(() => {
-                setFiles(prev => prev.map(f => {
-                    if (f.id === file.id && f.status === 'uploading') {
-                        const newProgress = f.progress + 10;
-                        if (newProgress >= 100) {
-                            clearInterval(interval);
-                            return { ...f, progress: 100, status: 'success' };
-                        }
-                        return { ...f, progress: newProgress };
-                    }
-                    return f;
-                }));
-            }, 200);
+            formData.append('files[]', file);
         });
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'https://sign.skibiditech.co/upload_ipa.php', true);
+
+        const tempId = `temp-${Date.now()}`;
+        const tempFile: UploadedFile = {
+            id: tempId,
+            name: filesToUpload.map(f => f.name).join(', '),
+            size: filesToUpload.reduce((acc, f) => acc + f.size, 0),
+            status: 'uploading',
+            progress: 0,
+            selectedCert: '1',
+        };
+        setFiles(prev => [tempFile, ...prev]);
+
+        xhr.upload.onprogress = (event) => {
+            if (event.lengthComputable) {
+                const percentComplete = (event.loaded / event.total) * 100;
+                setFiles(prev => prev.map(f => f.id === tempId ? { ...f, progress: percentComplete } : f));
+            }
+        };
+
+        xhr.onload = () => {
+            setFiles(prev => prev.filter(f => f.id !== tempId)); // Remove temporary entry
+            if (xhr.status === 200) {
+                try {
+                    const response = JSON.parse(xhr.responseText);
+                    if (response.success && response.data && response.data.uploaded_files) {
+                        const newFiles: UploadedFile[] = response.data.uploaded_files.map((file: any) => ({
+                            id: file.name, // The server returns the ID in the 'name' field
+                            name: file.original_name,
+                            size: file.size,
+                            status: 'success',
+                            progress: 100,
+                            selectedCert: '1',
+                        }));
+                        setFiles(prev => [...newFiles, ...prev]);
+                        toast({ title: "Upload complete", description: "Your files are ready to be signed." });
+                    } else {
+                        const errorMsg = response.data?.errors?.join(', ') || 'Unknown upload error.';
+                        toast({ title: 'Upload Failed', description: errorMsg, variant: 'destructive' });
+                    }
+                } catch (e) {
+                    toast({ title: 'Upload Failed', description: 'Invalid response from server.', variant: 'destructive' });
+                }
+            } else {
+                toast({ title: 'Upload Failed', description: `Server returned status ${xhr.status}`, variant: 'destructive' });
+            }
+        };
+
+        xhr.onerror = () => {
+            setFiles(prev => prev.filter(f => f.id !== tempId));
+            toast({ title: 'Upload Error', description: 'Could not connect to the server.', variant: 'destructive' });
+        };
+        
+        xhr.send(formData);
     };
 
-    const handleSign = (fileId: string) => {
+    const handleSign = async (fileId: string) => {
+        const fileToSign = files.find(f => f.id === fileId);
+        if (!fileToSign) return;
+
         setFiles(prev => prev.map(f => f.id === fileId ? { ...f, status: 'signing' } : f));
-        setTimeout(() => {
-            const signedFile = files.find(f => f.id === fileId);
-            if (signedFile) {
+
+        try {
+            const response = await fetch(`https://sign.skibiditech.co/sign.php?app=${fileId}&cert=${fileToSign.selectedCert}&rid=${Math.random()}`, { method: "POST" });
+            const json = await response.json();
+
+            if (json.state) {
                 setFiles(prev => prev.map(f => f.id === fileId ? { ...f, status: 'signed' } : f));
-                onFileSigned({ id: signedFile.id, name: signedFile.name, size: signedFile.size });
+                onFileSigned({ id: fileToSign.id, name: fileToSign.name, size: fileToSign.size });
                 toast({
                     title: "Signing Complete",
-                    description: `${signedFile.name} has been signed.`,
+                    description: `${fileToSign.name} has been signed.`,
                 });
+            } else {
+                const errorMsg = json.state || "An unknown error occurred during signing.";
+                setFiles(prev => prev.map(f => f.id === fileId ? { ...f, status: 'error', errorMessage: errorMsg } : f));
+                toast({ title: "Signing Failed", description: errorMsg, variant: 'destructive' });
             }
-        }, 2000);
+        } catch (error) {
+            setFiles(prev => prev.map(f => f.id === fileId ? { ...f, status: 'error', errorMessage: 'Network error' } : f));
+            toast({ title: "Signing Failed", description: 'Could not connect to the signing server.', variant: 'destructive' });
+        }
     };
     
-    const handleInstall = (fileName: string) => {
+    const handleInstall = (fileId: string) => {
+        const fileToInstall = files.find(f => f.id === fileId);
+        if (!fileToInstall) return;
+
         toast({
             title: "Installation Started",
-            description: `Your device will now ask for confirmation to install ${fileName}.`,
+            description: `Your device will now ask for confirmation to install ${fileToInstall.name}.`,
         });
-        // This is a placeholder link. For a real installation, you would need a backend
-        // to generate and host a .plist file that points to the signed .ipa file.
-        const plistUrl = `https://example.com/manifests/${fileName}.plist`;
-        window.location.href = `itms-services://?action=download-manifest&url=${encodeURIComponent(plistUrl)}`;
+
+        const manifestUrl = `https://sign.skibiditech.co/generate_plist.php?app=${fileId}&rid=${Math.random()}`;
+        window.location.href = `itms-services://?action=download-manifest&url=${encodeURIComponent(manifestUrl)}`;
+        
+        setFiles(prev => prev.map(f => f.id === fileId ? { ...f, status: 'installing' } : f));
     };
 
     const formatFileSize = (bytes: number) => {
@@ -109,6 +165,11 @@ export default function Upload({ onFileSigned }: UploadProps) {
         const i = Math.floor(Math.log(bytes) / Math.log(k));
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     };
+    
+    const handleCertChange = (fileId: string, value: string) => {
+        setFiles(prev => prev.map(f => f.id === fileId ? { ...f, selectedCert: value } : f));
+    };
+
 
     return (
         <div>
@@ -150,27 +211,29 @@ export default function Upload({ onFileSigned }: UploadProps) {
                                         <p className="font-semibold truncate">{file.name}</p>
                                         <p className="text-sm text-muted-foreground">{formatFileSize(file.size)}</p>
                                         {(file.status === 'uploading' || file.status === 'signing') && <Progress value={file.progress} className="mt-2 h-2" />}
+                                        {file.status === 'error' && <p className="text-sm text-destructive">{file.errorMessage}</p>}
                                     </div>
                                     <div className="flex items-center gap-2 min-w-[220px]">
                                         {file.status === 'success' && (
                                             <>
-                                                <Select defaultValue="1">
+                                                <Select value={file.selectedCert} onValueChange={(value) => handleCertChange(file.id, value)}>
                                                     <SelectTrigger className="w-[120px]">
                                                         <SelectValue placeholder="Certificate" />
                                                     </SelectTrigger>
                                                     <SelectContent>
-                                                        <SelectItem value="1">Vietnam Cert</SelectItem>
-                                                        <SelectItem value="2">Beijing Cert</SelectItem>
-                                                        <SelectItem value="3">Wuling Cert</SelectItem>
+                                                        <SelectItem value="1">Vietnam</SelectItem>
+                                                        <SelectItem value="2">Vietnam 2</SelectItem>
+                                                        <SelectItem value="3">Vietnam 3</SelectItem>
+                                                        <SelectItem value="4">Vietnam 4</SelectItem>
                                                     </SelectContent>
                                                 </Select>
                                                 <Button onClick={() => handleSign(file.id)}>Sign</Button>
                                             </>
                                         )}
-                                        {file.status === 'signing' && <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />}
-                                        {file.status === 'signed' && <Button onClick={() => handleInstall(file.name)} className="bg-accent hover:bg-accent/90">Install</Button>}
-                                        {file.status === 'uploading' && <span className="text-sm text-muted-foreground">{file.progress}%</span>}
-                                        {file.status === 'error' && <XCircle className="h-5 w-5 text-destructive" />}
+                                        {file.status === 'signing' && <><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /> <span>Signing...</span></>}
+                                        {(file.status === 'signed' || file.status === 'installing') && <Button onClick={() => handleInstall(file.id)} className="bg-accent hover:bg-accent/90">Install</Button>}
+                                        {file.status === 'uploading' && <span className="text-sm text-muted-foreground">{Math.round(file.progress)}%</span>}
+                                        {file.status === 'error' && <Button variant="destructive" onClick={() => handleSign(file.id)}>Retry</Button>}
                                     </div>
                                 </CardContent>
                             </Card>
