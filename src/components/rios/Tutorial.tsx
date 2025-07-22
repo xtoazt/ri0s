@@ -60,7 +60,7 @@ export default function Tutorial() {
                                         <h3 className="text-2xl font-bold mb-4 font-headline text-primary">Step {index + 1}: {step.title}</h3>
                                         <p className="text-muted-foreground mb-6">{step.description}</p>
                                         {step.action === 'download' && (
-                                            <a href="/signed_khoindvn.mobileconfig" download>
+                                            <a href="/signed_khoindvn (4).mobileconfig" download>
                                                 <Button className="shadow-lg hover:shadow-xl transition-shadow">
                                                     <Download className="mr-2 h-4 w-4" />
                                                     Download Profile
