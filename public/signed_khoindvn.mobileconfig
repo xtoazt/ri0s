@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 0‚;¸	*†H†÷ ‚;©0‚;¥10	`†He0‚&÷	*†H†÷ ‚&è‚&ä<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -248,3 +249,46 @@ IƒSĞ¶fèÛ®‘_‡Y*iœâ%Æ úgjrÃ^‡Œ³÷>ÖÿÍkY…œ&?”ß5&ì«®: «oÄfŸÓ²‚çòıV÷VPfl}ä*ñCÂ}
 ´ $_6p0lqlHbÇÌ©U¥Uk{. 5ç½ÉÙ&#Ø‡MÀ Ş*—µJâ»9bäOªìÃ@”Îßù³Ô­>ø¶dÂÆ·-°1‚¶0‚²0¥010	UGB10UGreater Manchester10USalford10U
 Sectigo Limited1705U.Sectigo RSA Domain Validation Secure Server CA Š•ºÙÃû³Ä_0Pãì0	`†He ä0	*†H†÷	1	*†H†÷0	*†H†÷	1250613050743Z0/	*†H†÷	1" âÎÕïC7¦Uvû£äÅ½Š/$q•Eù;‹½LJ™0y	*†H†÷	1l0j0	`†He*0	`†He0	`†He0
 *†H†÷0*†H†÷ €0*†H†÷@0+0*†H†÷(0	*†H†÷ ‚ ,¼äğ®^/kÇÏø:YC"¡®“Ğ;ì·da©ÛÔ~ğÇWw¬ŠÅfpÏpç¹=±±†šÊZhl+zßuì¹İ­©%ç‘×W©CŸ)PJáTæòF>İj–ÌŒ&·nO¥ÄİÇ|Î°I6—.—+@Grx«· ü2­Ùn=ìáO?qtİæÈ nj¿Qj`jÆ~XE½Şª¼ßÛºÇëyóò-îêØ@ôú©)`†É9ÍptkÓZ¸"¤‹Šëù¸ƒQ+Æ+^#Qmïå%øé?¡xˆÌM,£kşAT»Í˜h…"úl˜EfeŞŸúeXÕã
+=======
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>PayloadDescription</key>
+			<string>Adds a Web Clip to the Home Screen</string>
+			<key>PayloadDisplayName</key>
+			<string>Ri0S</string>
+			<key>PayloadIdentifier</key>
+			<string>com.example.webclip.9B5A2A3A-2A7A-4E3D-9B5A-2A3A2A3A2A3A</string>
+			<key>PayloadType</key>
+			<string>com.apple.webClip.managed</string>
+			<key>PayloadUUID</key>
+			<string>9B5A2A3A-2A7A-4E3D-9B5A-2A3A2A3A2A3A</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>URL</key>
+			<string>https://example.com</string>
+			<key>Label</key>
+			<string>Ri0S Installer</string>
+			<key>IsRemovable</key>
+			<true/>
+		</dict>
+	</array>
+	<key>PayloadDisplayName</key>
+	<string>Ri0S Profile</string>
+	<key>PayloadIdentifier</key>
+	<string>com.example.profile.9B5A2A3A-2A7A-4E3D-9B5A-2A3A2A3A2A3A</string>
+	<key>PayloadRemovalDisallowed</key>
+	<false/>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadUUID</key>
+	<string>2A7A4E3D-9B5A-4E3D-9B5A-2A3A2A3A2A3A</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+</dict>
+</plist>
+>>>>>>> 9121fd0 (when i try and download the config, it just hives me a 404 page error)
