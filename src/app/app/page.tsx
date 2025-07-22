@@ -29,15 +29,16 @@ export default function Ri0SApp() {
 
     return (
         <div className="bg-background dark:bg-black text-foreground min-h-screen">
-          <div className="sticky top-0 z-20">
-            <Header />
-          </div>
-          <div className="relative pb-28">
-            <main className="container mx-auto px-2 sm:px-4 py-6">
-                {renderContent()}
-            </main>
-            <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
-          </div>
+            <div id="particles" className="fixed inset-0 -z-10"></div>
+            <div className="sticky top-0 z-20">
+              <Header />
+            </div>
+            <div className="relative pb-28">
+              <main className="container mx-auto px-2 sm:px-4 py-6">
+                  {renderContent()}
+              </main>
+              <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
+            </div>
         </div>
     );
 }

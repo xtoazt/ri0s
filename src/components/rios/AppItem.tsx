@@ -22,7 +22,7 @@ export default function AppItem({ name, category, rating, ratingCount, price, li
     const aiHint = name.split(' ').slice(0, 2).join(' ').toLowerCase();
 
     return (
-        <Card className="hover:shadow-md transition-shadow dark:bg-card">
+        <Card className="hover:shadow-lg transition-all duration-300 hover:scale-[1.02] dark:bg-card/30">
             <CardContent className="p-4 flex items-center gap-4">
                 <Image
                     src={`https://placehold.co/64x64.png`}
@@ -30,7 +30,7 @@ export default function AppItem({ name, category, rating, ratingCount, price, li
                     alt={`${name} Icon`}
                     width={64}
                     height={64}
-                    className="rounded-xl"
+                    className="rounded-xl shadow-md"
                 />
                 <div className="flex-1">
                     <h3 className="font-semibold text-lg">{name}</h3>
@@ -40,7 +40,7 @@ export default function AppItem({ name, category, rating, ratingCount, price, li
                         <span className="text-xs text-muted-foreground">({ratingCount})</span>
                     </div>
                 </div>
-                <Button onClick={handleGet} variant="ghost" className="bg-primary/10 text-primary hover:bg-primary/20 rounded-full px-6">
+                <Button onClick={handleGet} variant="ghost" className="bg-primary/10 text-primary hover:bg-primary/20 rounded-full px-6 font-bold">
                     {price === "Free" ? "GET" : price}
                 </Button>
             </CardContent>

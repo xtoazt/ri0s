@@ -50,7 +50,7 @@ const tutorialSteps = [
 
 export default function Tutorial() {
   return (
-    <Card className="w-full max-w-4xl mx-auto shadow-xl dark:bg-card">
+    <Card className="w-full max-w-4xl shadow-xl dark:bg-card/30 border-white/10">
         <CardContent className="p-0">
              <Carousel className="w-full">
                 <CarouselContent>
@@ -72,7 +72,7 @@ export default function Tutorial() {
                                     <p className="text-muted-foreground mb-6">{step.description}</p>
                                     {step.action === 'download' && (
                                         <a href="/khoindvn_signed.mobileconfig" download>
-                                            <Button>
+                                            <Button className="shadow-lg hover:shadow-xl transition-shadow">
                                                 <Download className="mr-2 h-4 w-4" />
                                                 Download Profile
                                             </Button>
@@ -80,7 +80,7 @@ export default function Tutorial() {
                                     )}
                                     {step.action === 'proceed' && (
                                         <Link href="/app" passHref>
-                                            <Button className="bg-accent hover:bg-accent/90">
+                                            <Button className="bg-accent hover:bg-accent/90 shadow-lg hover:shadow-xl transition-shadow">
                                                 Proceed to App
                                                 <ChevronRight className="ml-2 h-4 w-4" />
                                             </Button>
@@ -91,8 +91,8 @@ export default function Tutorial() {
                         </CarouselItem>
                     ))}
                 </CarouselContent>
-                <CarouselPrevious className="hidden sm:flex" />
-                <CarouselNext className="hidden sm:flex" />
+                <CarouselPrevious className="hidden sm:flex left-4 text-white bg-black/30 hover:bg-black/50 border-white/20" />
+                <CarouselNext className="hidden sm:flex right-4 text-white bg-black/30 hover:bg-black/50 border-white/20" />
             </Carousel>
         </CardContent>
     </Card>
