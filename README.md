@@ -1,5 +1,4 @@
-# Firebase Studio
+# Ri0S
 
-This is a NextJS starter in Firebase Studio.
+The Future of Sideloading on iOS
 
-To get started, take a look at src/app/page.tsx.
