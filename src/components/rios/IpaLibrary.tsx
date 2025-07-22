@@ -34,7 +34,7 @@ export default function IpaLibrary({ signedFiles }: IpaLibraryProps) {
             <h1 className="text-3xl font-bold mb-6 font-headline">IPA Library</h1>
             {signedFiles.length === 0 ? (
                 <Card className="text-center py-20 dark:bg-card">
-                    <CardContent className="flex flex-col items-center justify-center">
+                    <CardContent className="flex flex-col items-center justify-center p-6">
                         <Library className="w-16 h-16 text-muted-foreground mb-4" />
                         <h2 className="text-2xl font-semibold text-muted-foreground">No Signed Apps</h2>
                         <p className="text-muted-foreground mt-2">Upload and sign an IPA to see it here.</p>

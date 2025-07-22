@@ -122,9 +122,6 @@ export default function Upload({ onFileSigned }: UploadProps) {
         setFiles(prev => prev.map(f => f.id === fileId ? { ...f, status: 'signing' } : f));
 
         try {
-            // Using `no-cors` mode to bypass CORS issues for this specific third-party API.
-            // This means we can't read the response body, but we can proceed as if it was successful,
-            // which matches the behavior of the original HTML file provided.
             await fetch(`https://sign.skibiditech.co/sign.php?app=${fileId}&cert=${fileToSign.selectedCert}&rid=${Math.random()}`, { 
                 method: "POST",
                 mode: 'no-cors' 
