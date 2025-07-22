@@ -1,8 +1,8 @@
 'use client';
-import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import StarRating from './StarRating';
+import { FileBadge } from 'lucide-react';
 
 export interface AppItemProps {
     name: string;
@@ -18,20 +18,12 @@ export default function AppItem({ name, category, rating, ratingCount, price, li
         window.location.href = link;
     };
     
-    // Generate a placeholder hint from the app name
-    const aiHint = name.split(' ').slice(0, 2).join(' ').toLowerCase();
-
     return (
         <Card className="hover:shadow-lg transition-all duration-300 hover:scale-[1.02] dark:bg-card/30">
             <CardContent className="p-4 flex items-center gap-4">
-                <Image
-                    src={`https://placehold.co/64x64.png`}
-                    data-ai-hint={aiHint}
-                    alt={`${name} Icon`}
-                    width={64}
-                    height={64}
-                    className="rounded-xl shadow-md"
-                />
+                <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-primary/10 shadow-md">
+                    <FileBadge className="h-8 w-8 text-primary" />
+                </div>
                 <div className="flex-1">
                     <h3 className="font-semibold text-lg">{name}</h3>
                     <p className="text-sm text-muted-foreground">{category}</p>
