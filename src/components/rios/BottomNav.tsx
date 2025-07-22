@@ -1,5 +1,5 @@
 'use client';
-import { Smartphone, FileBadge, Library, UploadCloud } from 'lucide-react';
+import { FileBadge, Library, UploadCloud } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface BottomNavProps {
@@ -8,7 +8,6 @@ interface BottomNavProps {
 }
 
 const navItems = [
-    { id: 'signers', label: 'Signers', icon: Smartphone },
     { id: 'certificates', label: 'Certificates', icon: FileBadge },
     { id: 'library', label: 'Library', icon: Library },
     { id: 'upload', label: 'Upload', icon: UploadCloud },

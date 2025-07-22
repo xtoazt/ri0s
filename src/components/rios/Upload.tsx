@@ -17,7 +17,17 @@ interface UploadedFile {
     errorMessage?: string;
 }
 
-export default function Upload() {
+export interface SignedFile {
+    id: string;
+    name: string;
+    size: number;
+}
+
+interface UploadProps {
+    onFileSigned: (file: SignedFile) => void;
+}
+
+export default function Upload({ onFileSigned }: UploadProps) {
     const [files, setFiles] = useState<UploadedFile[]>([]);
     const [isDragging, setIsDragging] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -69,11 +79,15 @@ export default function Upload() {
     const handleSign = (fileId: string) => {
         setFiles(prev => prev.map(f => f.id === fileId ? { ...f, status: 'signing' } : f));
         setTimeout(() => {
-            setFiles(prev => prev.map(f => f.id === fileId ? { ...f, status: 'signed' } : f));
-            toast({
-                title: "Signing Complete",
-                description: `${files.find(f => f.id === fileId)?.name} has been signed.`,
-            });
+            const signedFile = files.find(f => f.id === fileId);
+            if (signedFile) {
+                setFiles(prev => prev.map(f => f.id === fileId ? { ...f, status: 'signed' } : f));
+                onFileSigned({ id: signedFile.id, name: signedFile.name, size: signedFile.size });
+                toast({
+                    title: "Signing Complete",
+                    description: `${signedFile.name} has been signed.`,
+                });
+            }
         }, 2000);
     };
     

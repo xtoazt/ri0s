@@ -1,27 +1,29 @@
 'use client';
 import { useState } from 'react';
 import BottomNav from '@/components/rios/BottomNav';
-import SignersList from '@/components/rios/SignersList';
 import CertificatesList from '@/components/rios/CertificatesList';
 import IpaLibrary from '@/components/rios/IpaLibrary';
-import Upload from '@/components/rios/Upload';
+import Upload, { type SignedFile } from '@/components/rios/Upload';
 import Header from '@/components/rios/Header';
 
 export default function Ri0SApp() {
-    const [activeTab, setActiveTab] = useState('signers');
+    const [activeTab, setActiveTab] = useState('certificates');
+    const [signedFiles, setSignedFiles] = useState<SignedFile[]>([]);
+
+    const handleFileSigned = (file: SignedFile) => {
+        setSignedFiles(prev => [...prev, file]);
+    };
 
     const renderContent = () => {
         switch (activeTab) {
-            case 'signers':
-                return <SignersList />;
             case 'certificates':
                 return <CertificatesList />;
             case 'library':
-                return <IpaLibrary />;
+                return <IpaLibrary signedFiles={signedFiles} />;
             case 'upload':
-                return <Upload />;
+                return <Upload onFileSigned={handleFileSigned} />;
             default:
-                return <SignersList />;
+                return <CertificatesList />;
         }
     };
 

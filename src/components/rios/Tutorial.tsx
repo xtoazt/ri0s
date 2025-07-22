@@ -41,7 +41,7 @@ const tutorialSteps = [
     },
     {
         title: "All Set!",
-        description: "Congratulations! The Ri0S profile is now installed. You can proceed to the app to start discovering and signing applications.",
+        description: "Congratulations! The Ri0S profile is now installed. You can proceed to the app to start discovering and signing applications. The shortcut that's downloaded after installing the profile is unessesary, you can ignore or delete it.",
         image: "https://placehold.co/800x400",
         dataAiHint: "success checkmark",
         action: "proceed"
